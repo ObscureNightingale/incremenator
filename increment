@@ -1,0 +1,60 @@
+#!/bin/bash
+
+function _help() {
+    echo "INCREMENATOR -- create the amount of necessary directories for each file with the specified extension."
+    echo " "
+    echo "incremenator -ext [extension] -dir [directory]"
+    echo " "
+    echo "Options:"
+    echo "-h, --help                            display this help page"
+    echo "-d, -dir, --directory=DIRECTORY       the directory from which the files will be read"
+    echo "-ex, -ext, --extension=EXTENSION      the extension the file must have in order to be counted"
+}
+
+function increment() {
+
+  # Locally used variables (extension & directory)
+  EXT=""
+  DIR=""
+
+  # Loop used for determining the values of the necessary flags, and which flags were supplied.
+  while true; do
+    case $1 in
+      -h|--help|"")
+          _help
+          return
+        ;;
+      -ex*|-ext*|--extension*)
+          EXT="$2"
+          shift 2
+        ;;&
+      -d*|-dir*|--directory*)
+          DIR="$2"
+          shift 2
+        ;;
+      *)
+          break
+        ;;
+    esac
+  done
+
+  # Loop for counting how many files there are which match the specified extension.
+  I=0
+  for _ in $(find $DIR -name "*.$EXT"); do
+    I=$((I + 1))
+  done
+
+  # Loop for creating the directories for each file.
+  for ((i=I;i>0;i--)); do
+    X=$(printf "%.2d" $i)
+    mkdir "$DIR/$X" 2> /dev/null
+    if [ $? = 0 ]; then
+      echo "Successfully created directory $X"
+    else
+      echo "Directory '$X' already exists."
+    fi
+  done
+}
+
+# Call increment function when scrip has been run
+increment "$@"
