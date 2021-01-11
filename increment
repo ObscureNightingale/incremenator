@@ -56,5 +56,5 @@ function increment() {
   done
 }
 
-# Call increment function when scrip has been run
+# Call increment function when script has been run
 increment "$@"
