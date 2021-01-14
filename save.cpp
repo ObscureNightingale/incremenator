@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
+#include <filesystem>
 
 std::vector<std::string> get_sections(std::string file_name)
 {
@@ -110,8 +111,8 @@ void save_organised(std::string latest)
 {
   std::string context;
   std::fstream latest_file(latest, std::ios::out | std::ios::in);
-  std::fstream organised("maps-organised.txt", std::ios::out);
-  
+  std::fstream organised("/tmp/increment/maps-organised.txt", std::ios::out);
+
   if (!organised)
   {
     std::cout << "unable to create organised file..\n";
@@ -119,7 +120,7 @@ void save_organised(std::string latest)
   }
 
   organised.close();
-  organised.open("maps-organised.txt", std::ios::out | std::ios::in);
+  organised.open("/tmp/increment/maps-organised.txt", std::ios::out | std::ios::in);
 
   while (std::getline(latest_file, context))
   {
@@ -147,17 +148,14 @@ void save_organised(std::string latest)
 
       tp += "}";
     }
-
-    std::cout << tp << "\n";
-
     organised << tp << std::endl;
   }
 
   latest_file.close();
   organised.close();
 
-  remove("maps.txt");
-  rename("maps-organised.txt", "maps.txt");
+  remove("/tmp/increment/maps.txt");
+  rename("/tmp/increment/maps-organised.txt", "/tmp/increment/maps.txt");
 }
 
 void save(std::string first, std::string second)
@@ -174,7 +172,7 @@ void save(std::string first, std::string second)
   std::string previous;
   std::string to_push_F = sanitise(first);
   std::string to_push_S = sanitise(second);
-  std::fstream new_file("maps-new.txt", std::ios::out);
+  std::fstream new_file("/tmp/increment/maps-new.txt", std::ios::out);
 
   if (!new_file)
   {
@@ -184,11 +182,11 @@ void save(std::string first, std::string second)
   }
 
   new_file.close();
-  new_file.open("maps-new.txt", std::ios::in | std::ios::out);
+  new_file.open("/tmp/increment/maps-new.txt", std::ios::in | std::ios::out);
 
-  for (const auto _ : get_sections("maps.txt"))
+  for (const auto _ : get_sections("/tmp/increment/maps.txt"))
   {
-    file.open("maps.txt", std::ios::in | std::ios::out);
+    file.open("/tmp/increment/maps.txt", std::ios::in | std::ios::out);
 
     if (file.is_open())
       while (!file.eof() && getline(file, content))
@@ -234,12 +232,86 @@ void save(std::string first, std::string second)
     new_file.close();
   }
 
-  remove("maps.txt");
-  rename("maps-new.txt", "maps.txt");
+  remove("/tmp/increment/maps.txt");
+  rename("/tmp/increment/maps-new.txt", "/tmp/increment/maps.txt");
+}
+
+bool has_section(std::string val)
+{
+  std::fstream dest("/tmp/increment/maps.txt");
+  std::string f;
+  bool has = 0;
+
+  while (std::getline(dest, f))
+  {
+    std::cout << f << "\n";
+    if (f.find("[") != std::string::npos && f.find(val) != std::string::npos)
+    {
+      has = 1;
+      break;
+    }
+  }
+
+  return has;
+}
+
+std::string section_name(std::string name)
+{
+  std::remove_if(name.begin(), name.end(), [](unsigned char c) { return isdigit(c); });
+
+  return name.substr(0, name.find("."));
+}
+
+void cfe(int n, char *vs[])
+{
+  std::fstream dstr("/tmp/increment/maps.txt", std::ios::out);
+  std::string ctx;
+  std::fstream nw("/tmp/increment/maps-temp.txt", std::ios::out);
+  std::vector<std::string> uniques;
+
+  nw.close();
+  nw.open("/tmp/increment/maps-temp.txt", std::ios::out | std::ios::in);
+
+  for (int i = 1; i < n; i++)
+  {
+    std::string v = section_name(vs[i]);
+
+    // std::cout << v << "\n";
+
+    if (!std::count(uniques.begin(), uniques.end(), v))
+      uniques.push_back(v);
+  }
+
+  for (auto &v : uniques)
+  {
+    if (dstr.peek() == std::ifstream::traits_type::eof())
+    {
+      nw << "[" << v.substr(0, v.find(".")) << "]"
+         << "\nITEMS={}\n\n";
+      continue;
+    }
+    else
+      while (std::getline(dstr, ctx))
+      {
+        if (!has_section(v))
+        {
+          nw << "[" << v.substr(0, v.find(".")) << "]"
+             << "\nITEMS={}\n\n";
+        }
+      }
+  }
+
+  nw.close();
+
+  remove("/tmp/increment/maps.txt");
+  rename("/tmp/increment/maps-temp.txt", "/tmp/increment/maps.txt");
 }
 
 int main(int argc, char *argv[])
 {
+
+  cfe(argc, argv);
+
   int i = 1;
 
   while (i < argc)
@@ -252,5 +324,5 @@ int main(int argc, char *argv[])
     i += 2;
   }
 
-  save_organised("maps.txt");
+  save_organised("/tmp/increment/maps.txt");
 }

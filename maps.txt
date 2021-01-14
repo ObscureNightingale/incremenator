@@ -1,6 +1,0 @@
-[file]
-ITEMS={file01.mkv, file02.mkv, file03.mkv, file04.mkv}
-
-[simpsons]
-ITEMS={simpsons01.mkv, simpsons02.mkv, simpsons03.mkv, simpsons04.mkv}
-
