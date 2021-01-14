@@ -17,6 +17,8 @@ This shell-script was made to help myself personally upon downloading episodes o
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 * [g++](https://gcc.gnu.org/)
 
+**Steps:**
+
 1. `cd ~/Downloads`
 2. `git clone https://github.com/ObscureNightingale/incremenator`
 3. `chmod +rxw ~/Downloads/incremenator/increment`
