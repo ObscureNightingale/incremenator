@@ -1,6 +1,6 @@
 # Incremenator
 
-Incremenator is a basic shell-script used to create a reflecting amount of folders for each file in the specified directory. <br>
+(Currently a work-in-progress); Incremenator is a basic shell-script used to create a reflecting amount of folders for each file in the specified directory. <br>
 \* Files are only counted if they have the specified extension.
 
 This shell-script was made to help myself personally upon downloading episodes of a season from some TV show. 
@@ -13,12 +13,15 @@ This shell-script was made to help myself personally upon downloading episodes o
 
 ### How to install (Linux -- Ubuntu)
 
-**Prerequisite:** [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+**Prerequisites:** 
+* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [g++](https://gcc.gnu.org/)
 
 1. `cd ~/Downloads`
 2. `git clone https://github.com/ObscureNightingale/incremenator`
-3. `sudo mv ~/Downloads/incremenator/increment /usr/local/bin`
-4. `increment --help`
+3. `chmod +rxw ~/Downloads/incremenator/increment`
+4. `sudo mv ~/Downloads/incremenator/increment /usr/local/bin`
+5. `increment --help`
 
 Afterwards, a help page should echo to the terminal.
 
