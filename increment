@@ -6,55 +6,53 @@ function _help() {
     echo "incremenator -ext [extension] -dir [directory]"
     echo " "
     echo "Options:"
-    echo "-h, --help                            display this help page"
-    echo "-d, -dir, --directory=DIRECTORY       the directory from which the files will be read"
-    echo "-ex, -ext, --extension=EXTENSION      the extension the file must have in order to be counted"
+    echo "-h, --help                                   display this help page"
+    echo "-d, -dir, --directory=DIRECTORY              the directory from which the files will be read"
+    echo "-ex, -ext, --ext, --extension=EXTENSION      the extension the file must have in order to be counted"
 }
 
 function increment() {
 
   # Locally used variables (extension & directory)
-  EXT=""
-  DIR=""
+  local EXT=""
+  local DIR=""
 
   # Loop used for determining the values of the necessary flags, and which flags were supplied.
-  while true; do
-    case $1 in
+  for opt in "$@"; do
+    case $opt in
       -h|--help|"")
           _help
           return
         ;;
-      -ex*|-ext*|--extension*)
+      -ex|-ext|--ext|--extension)
+          if [[ $2 = *"."* ]]; then
+            echo "Please only include the extension's name without the dot (.)"
+            return
+          fi
           EXT="$2"
           shift 2
-        ;;&
-      -d*|-dir*|--directory*)
+        ;;
+      -d|-dir*|--directory)
           DIR="$2"
           shift 2
-        ;;
-      *)
-          break
         ;;
     esac
   done
 
-  # Loop for counting how many files there are which match the specified extension.
-  I=0
-  for _ in $(find $DIR -name "*.$EXT"); do
-    I=$((I + 1))
-  done
+  if [ -z $EXT ] || [ -z $DIR ]; then
+    _help
+    return
+  fi
 
-  # Loop for creating the directories for each file.
-  for ((i=I;i>0;i--)); do
-    X=$(printf "%.2d" $i)
-    mkdir "$DIR/$X" 2> /dev/null
-    if [ $? = 0 ]; then
-      echo "Successfully created directory $X"
-    else
-      echo "Directory '$X' already exists."
-    fi
-  done
+  myfiles=()
+
+  while IFS= read -r -d $'\0'; do
+    myfiles+=($(basename $REPLY))
+  done < <(find $DIR -type f -name "*.$EXT" -print0)
+
+  g++ -std=c++17 save.cpp -o main.out 2>&1
+
+  ./main.out "${myfiles[@]}"
 }
-
 # Call increment function when script has been run
 increment "$@"
