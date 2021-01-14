@@ -52,6 +52,8 @@ function increment() {
 
   g++ -std=c++17 save.cpp -o main.out 2>&1
 
+  chmod +rw ./main.out
+
   ./main.out "${myfiles[@]}"
 }
 # Call increment function when script has been run
