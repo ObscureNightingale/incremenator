@@ -3,12 +3,16 @@
 function _help() {
     echo "INCREMENATOR -- create the amount of necessary directories for each file with the specified extension."
     echo " "
-    echo "incremenator -ext [extension] -dir [directory]"
-    echo " "
-    echo "Options:"
-    echo "-h, --help                                   display this help page"
-    echo "-d, -dir, --directory=DIRECTORY              the directory from which the files will be read"
-    echo "-ex, -ext, --ext, --extension=EXTENSION      the extension the file must have in order to be counted"
+    echo -e "\e[94m[] - optional parameter \e[0m"
+    echo -e "\e[95m<> - required parameter \e[0m"
+    echo -e " "
+    echo -e "\e[91mincremenator -ext <extension> -dir <directory> -o [out_directory] \e[0m"
+    echo -e " "
+    echo -e "\e[92mOptions: \e[0m"
+    echo -e "\e[93m-h, --help                       \e[0m            display this help page"
+    echo -e "\e[96m-d, -dir, --directory=DIRECTORY  \e[0m            the directory from which the files will be read"
+    echo -e "\e[91m-ex, -ext, --ext, --extension=EXTENSION \e[0m     the extension the file must have in order to be counted"
+    echo -e "\e[32m-o, -out, --out-directory=OUT_DIR       \e[0m     directory where the created folders will be disposed (placed)."
 }
 
 function increment() {
@@ -16,6 +20,7 @@ function increment() {
   # Locally used variables (extension & directory)
   local EXT=""
   local DIR=""
+  local OUT=""
 
   # Loop used for determining the values of the necessary flags, and which flags were supplied.
   for opt in "$@"; do
@@ -24,7 +29,7 @@ function increment() {
           _help
           return
         ;;
-      -ex|-ext|--ext|--extension)
+      -ex*|-ext*|--ext*|--extension*)
           if [[ $2 = *"."* ]]; then
             echo "Please only include the extension's name without the dot (.)"
             return
@@ -32,8 +37,12 @@ function increment() {
           EXT="$2"
           shift 2
         ;;
-      -d|-dir*|--directory)
+      -d*|-dir*|--directory*)
           DIR="$2"
+          shift 2
+        ;;
+      -o*|-out*|--out-directory*)
+          OUT="$2"
           shift 2
         ;;
     esac
@@ -43,6 +52,8 @@ function increment() {
     _help
     return
   fi
+
+  [ -z $OUT ] && OUT="$DIR"
 
   MYFILES=()
 
@@ -64,6 +75,25 @@ function increment() {
   chmod +rw $MYDIR/main.out
 
   $MYDIR/main.out "${MYFILES[@]}"
+
+  while IFS= read -r LINE
+  do
+    if [[ "$LINE" = *"ITEMS="* ]]; then
+      ITEMS=$(grep -Po "(?<=\{).*(?=\})" <<< "$LINE")
+      DELIM=", "
+      IARR=()
+      IFS="$DELIM" IARR=(${ITEMS})
+
+      [[ "${OUT}" != */ ]] && OUT="${OUT}/"
+
+      [ ! -d $OUT ] && mkdir $OUT
+
+      for ITEM in "${IARR[@]}"; do
+        NAME=$OUT$(echo "$ITEM" | cut -f 1 -d '.' | sed -e 's/\([0-9]\+\)/ (\1)/g')
+        mkdir "$NAME" 2> /dev/null
+      done
+    fi
+  done < "/tmp/increment/maps.txt"
 }
 
 # Call increment function when script has been run
