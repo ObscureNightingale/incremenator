@@ -244,7 +244,6 @@ bool has_section(std::string val)
 
   while (std::getline(dest, f))
   {
-    std::cout << f << "\n";
     if (f.find("[") != std::string::npos && f.find(val) != std::string::npos)
     {
       has = 1;
@@ -268,6 +267,13 @@ void cfe(int n, char *vs[])
   std::string ctx;
   std::fstream nw("/tmp/increment/maps-temp.txt", std::ios::out);
   std::vector<std::string> uniques;
+
+  if (!nw)
+  {
+    std::cout << "unable to create certified file.."
+              << "\n";
+    return;
+  }
 
   nw.close();
   nw.open("/tmp/increment/maps-temp.txt", std::ios::out | std::ios::in);
@@ -307,8 +313,28 @@ void cfe(int n, char *vs[])
   rename("/tmp/increment/maps-temp.txt", "/tmp/increment/maps.txt");
 }
 
+bool certify_dir()
+{
+  if (std::filesystem::is_directory("/tmp/increment") == true)
+    return 1;
+
+  auto dir = std::filesystem::create_directory("/tmp/increment/");
+
+  if (!dir)
+    return 0;
+
+  return 1;
+}
+
 int main(int argc, char *argv[])
 {
+
+  if (!certify_dir())
+  {
+    std::cout << "INTERNAL ERROR: unable to create directory.."
+              << "\n";
+    return 0;
+  }
 
   cfe(argc, argv);
 
