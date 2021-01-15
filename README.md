@@ -35,9 +35,15 @@ __Values__:
 * FILEPATH  - directory from which to read the files
 * EXTENSION - extension which is required in order to count the file as valid
 * NULL      - blank; no value necessary
+* OUT       - path where the new directories will be disposed (created).
 
-|     Flag      |    Aliases    |   Value   |                             Description                             |
-|:-------------:|:-------------:|:---------:|:-------------------------------------------------------------------:|
-|   `--help`    |     `-h`      |   NULL    |                       Displays the help page                        |
-| `--directory` | `-dir`, `-d`  | FILEPATH  |               Directory where the files are located.                |
-| `--extension` | `-ext`, `-ex` | EXTENSION | Extension which the file must have in order to be counted as valid. |
+__Priority__:
+* `[]` - optional parameter
+* `<>` - required parameter 
+
+|       Flag        |    Aliases    |     Value     |                             Description                             |
+|:-----------------:|:-------------:|:-------------:|:-------------------------------------------------------------------:|
+|     `--help`      |     `-h`      |     NULL      |                       Displays the help page                        |
+|   `--directory`   | `-dir`, `-d`  | \<FILEPATH\>  |               Directory where the files are located.                |
+|   `--extension`   | `-ext`, `-ex` | \<EXTENSION\> | Extension which the file must have in order to be counted as valid. |
+| `--out-directory` | `-out`, `-o`  |    \[OUT\]    |     Path where the newly created directories will be disposed.      |
