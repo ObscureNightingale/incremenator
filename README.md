@@ -41,9 +41,9 @@ __Priority__:
 * `[]` - optional parameter
 * `<>` - required parameter 
 
-|       Flag        |    Aliases    |     Value     |                             Description                             |
-|:-----------------:|:-------------:|:-------------:|:-------------------------------------------------------------------:|
-|     `--help`      |     `-h`      |     NULL      |                       Displays the help page                        |
-|   `--directory`   | `-dir`, `-d`  | \<FILEPATH\>  |               Directory where the files are located.                |
-|   `--extension`   | `-ext`, `-ex` | \<EXTENSION\> | Extension which the file must have in order to be counted as valid. |
-| `--out-directory` | `-out`, `-o`  |    \[OUT\]    |     Path where the newly created directories will be disposed.      |
+|       Flag        |        Aliases         |     Value     |                             Description                             |
+|:-----------------:|:----------------------:|:-------------:|:-------------------------------------------------------------------:|
+|     `--help`      |          `-h`          |     NULL      |                       Displays the help page                        |
+|   `--directory`   |      `-dir`, `-d`      | \<FILEPATH\>  |               Directory where the files are located.                |
+|   `--extension`   | `--ext`, `-ext`, `-ex` | \<EXTENSION\> | Extension which the file must have in order to be counted as valid. |
+| `--out-directory` | `--out`, `-out`, `-o`  |    \[OUT\]    |     Path where the newly created directories will be disposed.      |
