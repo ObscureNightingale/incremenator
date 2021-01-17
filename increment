@@ -41,7 +41,7 @@ function increment() {
           DIR="$2"
           shift 2
         ;;
-      -o*|-out*|--out-directory*)
+      -o*|-out*|--out*|--out-directory*)
           OUT="$2"
           shift 2
         ;;
