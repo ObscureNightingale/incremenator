@@ -61,7 +61,9 @@ function increment() {
     MYFILES+=($(basename $REPLY))
   done < <(find $DIR -type f -name "*.$EXT" -print0)
 
-  EXECFILE=$(find ~ -type f -wholename "*/Incremenator/save.cpp")
+  EXECFILE=$(find ~ -type f -iwholename "*/Incremenator/save.cpp")
+
+  # [ -z "$EXECFILE" ] && 
 
   if [ -z "$EXECFILE" ]; then
     echo "Unable to locate Incremenator's main component -- \`save.cpp\`"
