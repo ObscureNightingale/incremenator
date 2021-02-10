@@ -38,11 +38,19 @@ function increment() {
           shift 2
         ;;
       -d*|-dir*|--directory*)
-          DIR="$2"
+          if [[ "$2" = "." ]]; then
+            DIR="$PWD"
+          else
+            DIR="$2"
+          fi
           shift 2
         ;;
       -o*|-out*|--out*|--out-directory*)
-          OUT="$2"
+          if [[ "$2" = "." ]]; then
+            OUT="$PWD"
+          else
+            OUT="$2"
+          fi
           shift 2
         ;;
     esac
